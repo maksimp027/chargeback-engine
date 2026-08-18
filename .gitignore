@@ -1,0 +1,52 @@
+# Virtual environment
+venv/
+.venv/
+env/
+ENV/
+
+# IDE files
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Datasets and local data files
+*.csv
+*.tsv
+*.xlsx
+*.parquet
+*.zip
+*.tar.gz
+*.tgz
+*.rar
+
+# Model artifacts and config JSON files
+*.onnx
+*.json
+*.bin
+*.pkl
+*.pb
+*.model
+*.pt
+*.pth
+*.h5
+!model_artifacts/
+!model_artifacts/*
+
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Local protoc compiler
+protoc/
+libonnxruntime.so*
+bin/
