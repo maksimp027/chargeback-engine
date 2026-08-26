@@ -40,6 +40,7 @@ func NewONNXEngine(modelPath string) (*ONNXEngine, error) {
 
 	outputTensor, err := ort.NewEmptyTensor[float32](outputShape)
 	if err != nil {
+		inputTensor.Destroy()
 		return nil, fmt.Errorf("failed to create output tensor: %w", err)
 	}
 
@@ -52,6 +53,7 @@ func NewONNXEngine(modelPath string) (*ONNXEngine, error) {
 		nil,
 	)
 	if err != nil {
+		inputTensor.Destroy()
 		outputTensor.Destroy()
 		return nil, fmt.Errorf("failed to create ONNX session: %w", err)
 	}
@@ -97,6 +99,7 @@ func (e *ONNXEngine) Close() error {
 		err = e.session.Destroy()
 	}
 	if e.inputTensor != nil {
+		e.inputTensor.Destroy()
 	}
 	if e.outputTensor != nil {
 		e.outputTensor.Destroy()
