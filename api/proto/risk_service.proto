@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package risk.v1;
+
+option go_package = "github.com/maksimp027/chargeback_predict/api/proto/v1;riskv1";
+
+service RiskService {
+  rpc EvaluateTransaction (RiskEvaluationRequest) returns (RiskEvaluationResponse);
+}
+
+message RiskEvaluationRequest {
+  string transaction_id = 1;
+  string merchant_id = 2;
+  string account_id = 3;
+  int64 amount_cents = 4;
+  string currency = 5;
+  int32 card_bin = 6;
+  string card_fingerprint = 7;
+  string client_ip = 8;
+  bool cvv_match = 9;
+  bool is_3ds_passed = 10;
+  string billing_country = 11;
+  int64 user_created_at = 12;
+}
+
+enum Decision {
+  DECISION_UNSPECIFIED = 0;
+  APPROVE = 1;
+  REVIEW_3DS = 2;
+  DECLINE = 3;
+}
+
+message RiskEvaluationResponse {
+  string transaction_id = 1;
+  Decision decision = 2;
+  float risk_score = 3;
+  string model_version = 4;
+  repeated string reason_codes = 5;
+  int64 execution_time_us = 6;
+}
