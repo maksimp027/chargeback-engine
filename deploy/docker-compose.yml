@@ -1,0 +1,39 @@
+services:
+  chargeback-service:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    container_name: chargeback-risk-engine
+    environment:
+      - SERVER_ADDR=:50051
+      - REDIS_ADDR=redis:6379
+      - MODEL_PATH=/app/model_artifacts/chargeback_model.onnx
+      - SCHEMA_PATH=/app/model_artifacts/features_schema.json
+      - ONNX_LIB_PATH=/usr/lib/libonnxruntime.so
+    ports:
+      - "50051:50051"
+    depends_on:
+      - redis
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: chargeback-redis
+    ports:
+      - "6379:6379"
+    command: redis-server --save 60 1 --loglevel notice
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: chargeback-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    restart: unless-stopped
+
+volumes:
+  redis-data:
